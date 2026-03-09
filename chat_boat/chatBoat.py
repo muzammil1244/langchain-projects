@@ -17,6 +17,7 @@ st.markdown("this an ai chatboat that help you ask anything whatever you want ")
 if "messages" not in  st.session_state:
   st.session_state.messages = []
 
+history = []
 
 for data in st.session_state.messages:
     role = data["role"]
@@ -29,7 +30,7 @@ input_data = st.chat_input("ask any question")
 if input_data:
   st.session_state.messages.append({"role":"user","content":input_data})
   st.chat_message("user").markdown(input_data)
-  res = model.invoke(input_data)
+  res = model.invoke( st.session_state.messages)
   st.chat_message("ai").markdown(res.content)
   st.session_state.messages.append({"role":"ai","content":res.content})
 
