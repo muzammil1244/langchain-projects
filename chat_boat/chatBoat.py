@@ -39,7 +39,7 @@ agetn1 = create_agent(
 
 
 
-st.title("AI Chat Boat")
+st.title(" AI Cha boat ")
 
 
 if "messages"  not in st.session_state:
@@ -47,7 +47,7 @@ if "messages"  not in st.session_state:
 
 
 
-input_chat = st.chat_input("Ask ? : ")
+input_chat = st.chat_input("how can i help you  ? : ")
 
 
 for message in st.session_state.messages:
