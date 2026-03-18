@@ -5,6 +5,7 @@ from langchain_community.utilities import SQLDatabase
 from langchain_community.agent_toolkits import SQLDatabaseToolkit
 from langgraph.checkpoint.memory import InMemorySaver
 from langchain.agents import create_agent
+import streamlit  as st
 load_dotenv()
 
 
@@ -51,24 +52,65 @@ Table schema: id, title, description, status(pending/work_in_progress/completed)
 
 
 # agent code
- 
+st.cache_resource
+def call_agent():
+  agent = create_agent(
+    model=model,
+    tools=tools,
+    system_prompt=system_prompt,
+    checkpointer=memory
 
-agent = create_agent(
-  model=model,
-  tools=tools,
-  system_prompt=system_prompt,
-  checkpointer=memory
+   )
+  return agent
 
- )
-
-
-
-while True :
-    user_input = input("User :")
-    res = agent.invoke(
-        {"messages":[{"role":"user","content":user_input}]},
-        {"configurable":{"thread_id":"1"}}
-    )
+if "history" not in st.session_state:
+  st.session_state.history = []
 
 
-    print("AI:"+ res["messages"][-1].content)
+
+
+for data in st.session_state.history:
+  role = data["role"]
+  content = data["content"]
+  st.chat_message(role).markdown(content)
+
+
+
+agent =call_agent()
+st.subheader(" TODO TASK MANAGER ")
+user_input = st.chat_input("perform operation on todo db : ")
+
+if user_input:
+   st.session_state.history.append({"role":"user","content":user_input})
+   st.chat_message("user").markdown(user_input) 
+
+
+   with st.chat_message("ai"):
+      with st.spinner("progress...."):
+       res = agent.invoke({
+      "messages":{"role":"user","content":user_input}
+   }, {"configurable":{"thread_id":"1"}})
+       
+       result = res["messages"][-1].content
+       st.markdown(result)
+       st.session_state.history.append({"role":"ai","content":result})
+
+
+
+
+
+
+
+
+
+
+
+# while True :
+#     user_input = input("User :")
+#     res = agent.invoke(
+#         {"messages":[{"role":"user","content":user_input}]},
+#         {"configurable":{"thread_id":"1"}}
+#     )
+
+
+#     print("AI:"+ res["messages"][-1].content)
