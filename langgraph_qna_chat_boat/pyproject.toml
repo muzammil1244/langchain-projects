@@ -1,0 +1,13 @@
+[project]
+name = "langgraph-qna-chat-boat"
+version = "0.1.0"
+description = "Add your description here"
+readme = "README.md"
+requires-python = ">=3.14"
+dependencies = [
+    "langchain>=1.2.15",
+    "langchain-community>=0.4.1",
+    "langchain-groq>=1.1.2",
+    "langgraph>=1.1.6",
+    "pydantic>=2.13.2",
+]
